@@ -42,3 +42,4 @@ cd backend && ./gradlew test
 cd clasificador && uv run pytest && uv run ruff check
 cd scraper && uv run pytest && uv run ruff check
 ```
+if the image isn’t working, try with tobi312/minio:latest. It works perfectly
