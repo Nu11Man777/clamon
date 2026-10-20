@@ -1,0 +1,25 @@
+server {
+    listen ${PORT};
+    server_name _;
+    root /usr/share/nginx/html;
+    server_tokens off;
+
+    add_header Content-Security-Policy "default-src 'self'; connect-src 'self' ${API_ORIGEN}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
+
+    location = /config.js {
+        default_type application/javascript;
+        add_header Cache-Control "no-store" always;
+        return 200 'window.CLAMON_CONFIG={"apiBase":"${API_ORIGEN}/api"};';
+    }
+
+    location = /salud {
+        default_type application/json;
+        return 200 '{"estado":"ok","servicio":"clamon-frontend"}';
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+}

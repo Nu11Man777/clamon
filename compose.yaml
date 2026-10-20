@@ -1,0 +1,91 @@
+name: clamon
+
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: local-root
+    volumes:
+      - mysql-datos:/var/lib/mysql
+      - ./infra/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-plocal-root"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:RELEASE.2026-09-22T19-25-18Z
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: local-minio
+      MINIO_ROOT_PASSWORD: local-minio-secret
+    volumes:
+      - minio-datos:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    depends_on:
+      backend:
+        condition: service_started
+
+  clasificador:
+    build: ./clasificador
+    env_file:
+      - path: ./clasificador/.env.example
+        required: false
+      - path: ./clasificador/.env
+        required: false
+    ports:
+      - "8091:8091"
+
+  scraper:
+    build: ./scraper
+    env_file:
+      - path: ./scraper/.env.example
+        required: false
+      - path: ./scraper/.env
+        required: false
+    ports:
+      - "8092:8092"
+
+  backend:
+    build: ./backend
+    env_file:
+      - path: ./backend/.env.example
+        required: false
+      - path: ./backend/.env
+        required: false
+    environment:
+      DB_HOST: mysql
+      S3_ENDPOINT: http://minio:9000
+      CLASIFICADOR_URL: http://clasificador:8091
+      SCRAPER_URL: http://scraper:8092
+    ports:
+      - "8090:8090"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      clasificador:
+        condition: service_started
+      scraper:
+        condition: service_started
+
+  frontend:
+    build: ./frontend
+    env_file:
+      - path: ./frontend/.env.example
+        required: false
+      - path: ./frontend/.env
+        required: false
+    ports:
+      - "8081:8080"
+    depends_on:
+      backend:
+        condition: service_started
+
+volumes:
+  mysql-datos:
+  minio-datos:

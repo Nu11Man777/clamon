@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CLAMON</title>
+  <link rel="stylesheet" href="/estilos.css">
+  <script src="/config.js"></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="barra">
+    <div>
+      <h1>CLAMON</h1>
+      <p class="subtitulo">Identificación y clasificación de información sensible</p>
+    </div>
+    <div class="sesion">
+      <span id="usuario" class="usuario" hidden></span>
+      <button id="btn-salir" type="button" class="secundario" hidden>Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <p id="aviso" class="aviso" role="status" hidden></p>
+
+    <section id="sec-entrar" class="tarjeta angosta" aria-labelledby="t-entrar">
+      <h2 id="t-entrar">Iniciar sesión</h2>
+      <form id="form-entrar" class="columna" autocomplete="on">
+        <label for="entrar-usuario">Usuario</label>
+        <input id="entrar-usuario" name="username" autocomplete="username" required maxlength="64">
+        <label for="entrar-contrasena">Contraseña</label>
+        <input id="entrar-contrasena" name="password" type="password" autocomplete="current-password" required maxlength="128">
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <section class="tarjeta" aria-labelledby="t-estado">
+      <h2 id="t-estado">Estado</h2>
+      <p>Backend: <span id="estado-backend" class="insignia">consultando…</span></p>
+      <p id="roles" class="roles" hidden></p>
+    </section>
+
+    <section id="sec-sitios" class="tarjeta" aria-labelledby="t-sitios" hidden>
+      <h2 id="t-sitios">Sitios</h2>
+      <form id="form-sitio" class="fila" hidden>
+        <label for="url-sitio" class="oculto">URL del sitio</label>
+        <input id="url-sitio" type="url" placeholder="https://example.com/" required maxlength="2048">
+        <button type="submit">Registrar</button>
+      </form>
+      <button id="btn-sitios" type="button" class="secundario">Actualizar lista</button>
+      <table id="tabla-sitios" hidden>
+        <thead><tr><th>ID</th><th>Sitio</th><th>Registrado por</th><th>Fecha</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="sec-analisis" class="tarjeta" aria-labelledby="t-analisis" hidden>
+      <h2 id="t-analisis">Análisis</h2>
+      <form id="form-analisis" class="fila" hidden>
+        <label for="sitio-analisis" class="oculto">Sitio</label>
+        <select id="sitio-analisis" required></select>
+        <button type="submit">Lanzar análisis</button>
+      </form>
+      <form id="form-consulta" class="fila">
+        <label for="id-analisis" class="oculto">ID de análisis</label>
+        <input id="id-analisis" type="number" min="1" placeholder="ID de análisis" required>
+        <button type="submit" class="secundario">Consultar</button>
+      </form>
+      <div id="resultado-analisis"></div>
+    </section>
+
+    <section id="sec-clasificar" class="tarjeta" aria-labelledby="t-clasificar" hidden>
+      <h2 id="t-clasificar">Clasificar texto</h2>
+      <form id="form-clasificar">
+        <label for="texto" class="oculto">Texto</label>
+        <textarea id="texto" rows="4" maxlength="20000" required
+          placeholder="Contacto: juan.perez@ejemplo.mx, tel 55 1234 4567"></textarea>
+        <button type="submit">Clasificar</button>
+      </form>
+      <div id="resultado-clasificar"></div>
+    </section>
+
+    <section id="sec-diagnostico" class="tarjeta" aria-labelledby="t-diagnostico" hidden>
+      <h2 id="t-diagnostico">Diagnóstico</h2>
+      <button id="btn-diagnostico" type="button">Consultar dependencias</button>
+      <div id="resultado-diagnostico"></div>
+    </section>
+
+    <section id="sec-usuarios" class="tarjeta" aria-labelledby="t-usuarios" hidden>
+      <h2 id="t-usuarios">Usuarios</h2>
+      <table id="tabla-usuarios">
+        <thead><tr><th>Usuario</th><th>Roles</th><th>Estado</th><th>Último acceso</th></tr></thead>
+        <tbody></tbody>
+      </table>
+
+      <h3>Crear usuario</h3>
+      <form id="form-crear-usuario" class="columna">
+        <label for="nuevo-usuario">Usuario</label>
+        <input id="nuevo-usuario" required pattern="[a-z0-9._\-]{3,64}" maxlength="64" placeholder="ana.analista" autocomplete="off">
+        <label for="nuevo-contrasena">Contraseña, mínimo 12 caracteres</label>
+        <input id="nuevo-contrasena" type="password" required minlength="12" maxlength="72" autocomplete="new-password">
+        <fieldset id="nuevo-roles" class="roles-casillas"><legend>Roles</legend></fieldset>
+        <button type="submit">Crear</button>
+      </form>
+
+      <h3>Modificar usuario</h3>
+      <form id="form-modificar-usuario" class="columna">
+        <label for="mod-usuario">Usuario</label>
+        <select id="mod-usuario" required></select>
+        <label for="mod-contrasena">Nueva contraseña, opcional</label>
+        <input id="mod-contrasena" type="password" minlength="12" maxlength="72" autocomplete="new-password">
+        <label for="mod-estado">Estado</label>
+        <select id="mod-estado">
+          <option value="">Sin cambio</option>
+          <option value="true">Activo</option>
+          <option value="false">Inactivo</option>
+        </select>
+        <label class="casilla"><input id="mod-cambiar-roles" type="checkbox"> Reemplazar roles</label>
+        <fieldset id="mod-roles" class="roles-casillas" disabled><legend>Roles</legend></fieldset>
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>Las secciones dependen de los roles de la sesión; la autorización real la hace el backend.</footer>
+</body>
+</html>

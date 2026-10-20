@@ -1,0 +1,12 @@
+CLASIFICADOR_URL: http://127.0.0.1:9
+SCRAPER_URL: http://127.0.0.1:9
+S3_ENDPOINT: http://127.0.0.1:9
+AUTH_SERVICIOS: none
+DB_TLS_MODE: trust
+JWT_SECRETO: secreto-de-pruebas-de-al-menos-32-bytes
+CORS_ORIGENES: http://localhost:8081
+clamon:
+  db:
+    inicializar: false
+  s3:
+    inicializar-bucket: false

@@ -1,0 +1,60 @@
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  server-header: ""
+  error:
+    include-message: never
+    include-stacktrace: never
+spring:
+  application:
+    name: clamon-backend
+  threads:
+    virtual:
+      enabled: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+logging:
+  structured:
+    format:
+      console: mx.ipn.cic.clamon.config.FormatoRegistro
+clamon:
+  version: 0.1.0
+  servicios:
+    clasificador-url: ${CLASIFICADOR_URL}
+    scraper-url: ${SCRAPER_URL}
+    auth: ${AUTH_SERVICIOS:google}
+  db:
+    host: ${DB_HOST:localhost}
+    port: ${DB_PORT:3306}
+    tls-mode: ${DB_TLS_MODE:verify-ca}
+    server-ca-path: ${DB_SERVER_CA_PATH:}
+    inicializar: true
+    usuarios:
+      name: ${DB_USUARIOS_NAME:clamon_usuarios}
+      user: ${DB_USUARIOS_USER:app_usuarios}
+      password: ${DB_USUARIOS_PASSWORD:}
+    negocio:
+      name: ${DB_NEGOCIO_NAME:clamon_negocio}
+      user: ${DB_NEGOCIO_USER:app_negocio}
+      password: ${DB_NEGOCIO_PASSWORD:}
+  s3:
+    endpoint: ${S3_ENDPOINT}
+    bucket: ${S3_BUCKET:expedientes}
+    access-key: ${S3_ACCESS_KEY:}
+    secret-key: ${S3_SECRET_KEY:}
+    inicializar-bucket: true
+  sesion:
+    jwt-secreto: ${JWT_SECRETO:}
+    duracion-min: ${SESION_DURACION_MIN:30}
+  admin-inicial:
+    usuario: ${ADMIN_INICIAL_USUARIO:adan.admin}
+    password: ${ADMIN_INICIAL_PASSWORD:}
+  cors-origenes: ${CORS_ORIGENES:}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

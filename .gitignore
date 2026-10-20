@@ -1,0 +1,22 @@
+# Entornos locales
+.env
+.env.*
+!.env.example
+
+# Dependencias y artefactos de compilación
+.venv/
+__pycache__/
+*.py[oc]
+target/
+build/
+.gradle/
+
+# Herramientas
+.pytest_cache/
+.ruff_cache/
+
+# Editores y sistema operativo
+.idea/
+.vscode/
+*.iml
+.DS_Store
